@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:garage/networking/networking.dart';
 import 'package:garage/pages/repair_item_CUD.dart';
 import 'package:garage/pages/repair_item_model.dart';
-import 'package:garage/pages/repair_item_search.dart';
+import 'package:garage/tool/tools.dart';
 import 'package:garage/ui_tool/refresh_footer.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class RepairListPage extends StatefulWidget {
+class RepairItemSearchPage extends StatefulWidget {
   final bool isSelectingItemForBill;
 
-  const RepairListPage({Key? key, required this.isSelectingItemForBill})
+  const RepairItemSearchPage({Key? key, required this.isSelectingItemForBill})
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _RepairListPageState();
+  State<StatefulWidget> createState() => _RepairItemSearchPageState();
 }
 
-class _RepairListPageState extends State<RepairListPage> {
+class _RepairItemSearchPageState extends State<RepairItemSearchPage> {
   final int _size = 20;
   int _page = 1;
-  List<RepairItemModel> _items = [];
+  final _inputController = TextEditingController();
   final _scrollController = ScrollController();
-  var _loadingStatus = RefreshFooterStatus.refreshing;
+  List<RepairItemModel> _items = [];
+  var _loadingStatus = RefreshFooterStatus.idle;
 
   @override
   void initState() {
     super.initState();
 
-    _requestFirstPageData();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
@@ -40,8 +40,31 @@ class _RepairListPageState extends State<RepairListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('维修项目列表'),
-        actions: [_searchButton()],
+        title: TextField(
+          controller: _inputController,
+          autofocus: true,
+          cursorColor: Colors.white70,  // 光标颜色
+          style: TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: '请输入搜索内容',
+            hintStyle: TextStyle(color: Colors.white70),
+          ),
+          onSubmitted: (text) {
+            _requestFirstPageData();
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: Image.asset(
+              'assets/search.png',
+              width: 20,
+              height: 20,
+              color: Colors.white,
+            ),
+            onPressed: _requestFirstPageData,
+          )
+        ],
       ),
       body: SafeArea(
         child: RefreshIndicator(
@@ -86,48 +109,21 @@ class _RepairListPageState extends State<RepairListPage> {
     );
   }
 
-  _searchButton() {
-    return IconButton(
-      icon: Image.asset(
-        'assets/search.png',
-        width: 20,
-        height: 20,
-        color: Colors.white,
-      ),
-      onPressed: () {
-        Future result =
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return RepairItemSearchPage(
-            isSelectingItemForBill: widget.isSelectingItemForBill,
-          );
-        }));
-
-        result.then((value) {
-          if (value != null) {
-            // 从创建维修单过来的，然后再搜索页面选中了某一项
-            Navigator.of(context).pop(value);
-          } else if (!widget.isSelectingItemForBill) {
-            // 从列表过来的，然后再搜索页面点了返回，此时可能在搜索页面进入了详情页面进行了编辑，所以需要进行刷新
-            // 但是不知道是修改了哪一个，所以只能重新载入数据
-            _requestFirstPageData();
-          }
-        });
-      },
-    );
-  }
-
   Future<void> _requestFirstPageData() async {
     await _requestRepairList(1);
   }
 
   _requestRepairList(int page) async {
-    if (_loadingStatus == RefreshFooterStatus.idle && page != 1) return;
-
-    await Networking.request('/api/repairProject/findByPage',
-        method: HTTPMethod.GET,
+    if (_inputController.text.length == 0) {
+      toast('搜索内容不能为空');
+      return;
+    }
+    Networking.request('/api/repairProject/pageByProperties',
+        method: HTTPMethod.POST,
         queryParameters: {
           'page': page,
           'size': _size,
+          'name': _inputController.text,
         }, succeedCallback: (responseData) async {
       final List newItemsJson = responseData['records'];
       final List<RepairItemModel> newItems = [];

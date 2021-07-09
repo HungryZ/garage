@@ -85,10 +85,15 @@ class Networking {
         return null;
       }
       if (succeedCallback != null) {
-        succeedCallback(responseData['data']);
+        var responseMap = responseData['data'];
+        if (responseMap == null) {
+          responseMap = {'key': 'value'};
+        }
+        succeedCallback(responseMap);
       }
       return responseData['data'];
     } on DioError catch (e) {
+      toast(e.message);
       if (failureCallback != null) {
         failureCallback(e.toString());
       }

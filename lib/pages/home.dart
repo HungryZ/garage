@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:garage/pages/repair_bill_create.dart';
+import 'package:garage/pages/repair_item_list.dart';
 import 'package:garage/ui_tool/section_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,8 +14,11 @@ class _HomePageState extends State<HomePage> {
       'title': '新建维修单',
       'icon': 'new',
       'action': (BuildContext context) {
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil('/createRepairBill', (route) => true);
+        Navigator.of(context).push(MaterialPageRoute(
+            settings: RouteSettings(name: 'CreateRepairBillPage'),
+            builder: (context) {
+              return CreateRepairBillPage();
+            }));
       },
     },
     {
@@ -35,8 +40,9 @@ class _HomePageState extends State<HomePage> {
       'title': '维修项目列表',
       'icon': 'list',
       'action': (BuildContext context) {
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil('/repairList', (route) => true);
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return RepairListPage(isSelectingItemForBill: false);
+        }));
       },
     },
   ];

@@ -7,9 +7,9 @@ enum RefreshFooterStatus {
 }
 
 class RefreshFooter extends StatelessWidget {
-  RefreshFooter(this.status);
-
   final RefreshFooterStatus status;
+
+  const RefreshFooter({Key? key, required this.status}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

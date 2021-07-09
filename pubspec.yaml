@@ -59,6 +59,9 @@ flutter:
     - assets/home.png
     - assets/mine.png
     - assets/list.png
+    - assets/plus.png
+    - assets/subtract.png
+    - assets/delete.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

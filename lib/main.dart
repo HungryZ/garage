@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:garage/pages/create_repair_bill.dart';
-import 'package:garage/pages/create_repair_item.dart';
+import 'package:garage/pages/repair_item_CUD.dart';
 import 'package:garage/pages/login.dart';
 import 'package:garage/pages/mine.dart';
-import 'package:garage/pages/repair_item_list.dart';
 import 'package:garage/ui_tool/tab_bar_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,7 +18,7 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: Size(375, 667),
       builder: () => MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Garage',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
@@ -32,9 +30,7 @@ class MyApp extends StatelessWidget {
           '/loginPage': (context) => LoginPage(),
           '/minePage': (context) => MinePage(),
           '/tabBar': (context) => TabBarController(),
-          '/createRepairBill': (context) => CreateRepairBillPage(),
-          '/createRepairItem': (context) => CreateRepairItemPage(),
-          '/repairList': (context) => RepairListPage(),
+          '/createRepairItem': (context) => RepairItemCUDPage(),
         },
         // initialRoute: '/login',
         // onGenerateRoute: _getRoute,
