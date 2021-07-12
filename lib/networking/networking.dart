@@ -84,20 +84,20 @@ class Networking {
         }
         return null;
       }
+      var responseMap = responseData['data'];
+      if (responseMap == null) {
+        responseMap = {'key': 'value'};
+      }
       if (succeedCallback != null) {
-        var responseMap = responseData['data'];
-        if (responseMap == null) {
-          responseMap = {'key': 'value'};
-        }
         succeedCallback(responseMap);
       }
-      return responseData['data'];
+      return responseMap;
     } on DioError catch (e) {
       toast(e.message);
       if (failureCallback != null) {
         failureCallback(e.toString());
       }
-      return Future.error(e);
+      return null;
     }
   }
 }

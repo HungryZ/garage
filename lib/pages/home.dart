@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:garage/pages/purchase_item_CUD.dart';
+import 'package:garage/pages/purchase_item_list.dart';
+import 'package:garage/pages/purchase_order_create.dart';
+import 'package:garage/pages/purchase_order_list.dart';
 import 'package:garage/pages/repair_bill_create.dart';
+import 'package:garage/pages/repair_bill_list.dart';
 import 'package:garage/pages/repair_item_list.dart';
+import 'package:garage/pages/repair_item_list_view_model.dart';
 import 'package:garage/ui_tool/section_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,15 +23,17 @@ class _HomePageState extends State<HomePage> {
         Navigator.of(context).push(MaterialPageRoute(
             settings: RouteSettings(name: 'CreateRepairBillPage'),
             builder: (context) {
-              return CreateRepairBillPage();
+              return RepairBillCreatePage();
             }));
       },
     },
     {
-      'title': '查询维修单',
-      'icon': 'search',
-      'action': () {
-        print('222');
+      'title': '维修单列表',
+      'icon': 'list',
+      'action': (BuildContext context) {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return RepairBillListPage();
+        }));
       },
     },
     {
@@ -41,7 +49,10 @@ class _HomePageState extends State<HomePage> {
       'icon': 'list',
       'action': (BuildContext context) {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return RepairListPage(isSelectingItemForBill: false);
+          return RepairItemListPage(
+            isSelectingItemForBill: false,
+            viewModel: RepairItemListViewModel(),
+          );
         }));
       },
     },
@@ -50,22 +61,37 @@ class _HomePageState extends State<HomePage> {
     {
       'title': '新建采购单',
       'icon': 'new',
-      'action': () {
-        print('111');
+      'action': (BuildContext context) {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return PurchaseOrderCreatePage();
+        }));
       },
     },
     {
-      'title': '查询采购单',
-      'icon': 'search',
-      'action': () {
-        print('111');
+      'title': '采购单列表',
+      'icon': 'list',
+      'action': (BuildContext context) {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return PurchaseOrderListPage();
+        }));
       },
     },
     {
-      'title': '管理采购项目',
-      'icon': 'repair',
-      'action': () {
-        print('111');
+      'title': '新建采购项目',
+      'icon': 'new',
+      'action': (BuildContext context) {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return PurchaseItemCUDPage();
+        }));
+      },
+    },
+    {
+      'title': '采购项目列表',
+      'icon': 'list',
+      'action': (BuildContext context) {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return PurchaseItemListPage();
+        }));
       },
     },
   ];
@@ -73,15 +99,19 @@ class _HomePageState extends State<HomePage> {
     {
       'title': '统计',
       'icon': 'statistics',
-      'action': () {
-        print('111');
+      'action': (BuildContext context) {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return RepairBillCreatePage();
+        }));
       },
     },
     {
       'title': '扫一扫',
       'icon': 'scan',
-      'action': () {
-        print('111');
+      'action': (BuildContext context) {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return RepairBillCreatePage();
+        }));
       },
     },
   ];

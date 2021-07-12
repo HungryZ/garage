@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:garage/networking/networking.dart';
 import 'package:garage/pages/repair_item_CUD.dart';
+import 'package:garage/pages/list_view_model.dart';
 import 'package:garage/pages/repair_item_model.dart';
 import 'package:garage/pages/repair_item_search.dart';
 import 'package:garage/ui_tool/refresh_footer.dart';
 
-class RepairListPage extends StatefulWidget {
+class RepairItemListPage extends StatefulWidget {
   final bool isSelectingItemForBill;
+  final ListViewModel viewModel;
 
-  const RepairListPage({Key? key, required this.isSelectingItemForBill})
+  const RepairItemListPage({Key? key, required this.isSelectingItemForBill, required this.viewModel})
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _RepairListPageState();
+  State<StatefulWidget> createState() => _RepairItemListPageState();
 }
 
-class _RepairListPageState extends State<RepairListPage> {
+class _RepairItemListPageState extends State<RepairItemListPage> {
   final int _size = 20;
   int _page = 1;
   List<RepairItemModel> _items = [];
@@ -123,33 +124,20 @@ class _RepairListPageState extends State<RepairListPage> {
   _requestRepairList(int page) async {
     if (_loadingStatus == RefreshFooterStatus.idle && page != 1) return;
 
-    await Networking.request('/api/repairProject/findByPage',
-        method: HTTPMethod.GET,
-        queryParameters: {
-          'page': page,
-          'size': _size,
-        }, succeedCallback: (responseData) async {
-      final List newItemsJson = responseData['records'];
-      final List<RepairItemModel> newItems = [];
-      newItemsJson.forEach((element) {
-        final item = RepairItemModel();
-        item.name = element['name'];
-        item.price = (element['price'] as double).toInt();
-        item.id = element['id'];
-        newItems.add(item);
-      });
-      setState(() {
-        _page = page;
-        if (_page == 1) {
-          _items.clear();
-        }
-        _items.addAll(newItems);
-        if (newItems.length == _size) {
-          _loadingStatus = RefreshFooterStatus.refreshing;
-        } else {
-          _loadingStatus = RefreshFooterStatus.idle;
-        }
-      });
+    final newItems = await widget.viewModel.requestItems(page);
+    if (newItems == null) return;
+
+    setState(() {
+      _page = page;
+      if (_page == 1) {
+        _items.clear();
+      }
+      _items.addAll(newItems);
+      if (newItems.length == _size) {
+        _loadingStatus = RefreshFooterStatus.refreshing;
+      } else {
+        _loadingStatus = RefreshFooterStatus.idle;
+      }
     });
   }
 

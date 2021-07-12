@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:garage/networking/networking.dart';
 import 'package:garage/pages/repair_item_list.dart';
+import 'package:garage/pages/repair_item_list_view_model.dart';
 import 'package:garage/pages/repair_item_model.dart';
 import 'package:garage/tool/input_validator/input_model.dart';
 import 'package:garage/tool/input_validator/input_validator.dart';
 import 'package:garage/tool/tools.dart';
 
-class CreateRepairBillPage extends StatefulWidget {
+class RepairBillCreatePage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _CreateRepairBillPageState();
+  State<StatefulWidget> createState() => _RepairBillCreatePageState();
 }
 
-class _CreateRepairBillPageState extends State<CreateRepairBillPage> {
+class _RepairBillCreatePageState extends State<RepairBillCreatePage> {
   final List<InputModel> _columns = [
     InputModel(
       name: '车牌',
@@ -173,7 +174,7 @@ class _CreateRepairBillPageState extends State<CreateRepairBillPage> {
               onTap: () {
                 Future result = Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
-                  return RepairListPage(isSelectingItemForBill: true);
+                  return RepairItemListPage(isSelectingItemForBill: true, viewModel: RepairItemListViewModel(),);
                 }));
                 result.then((value) {
                   // print(value);
