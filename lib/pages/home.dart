@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:garage/pages/list_view/repair_item_list_page.dart';
 import 'package:garage/pages/purchase_item_CUD.dart';
 import 'package:garage/pages/purchase_item_list.dart';
 import 'package:garage/pages/purchase_order_create.dart';
 import 'package:garage/pages/purchase_order_list.dart';
 import 'package:garage/pages/repair_bill_create.dart';
 import 'package:garage/pages/repair_bill_list.dart';
-import 'package:garage/pages/repair_item_list.dart';
-import 'package:garage/pages/repair_item_list_view_model.dart';
 import 'package:garage/ui_tool/section_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -49,10 +48,7 @@ class _HomePageState extends State<HomePage> {
       'icon': 'list',
       'action': (BuildContext context) {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return RepairItemListPage(
-            isSelectingItemForBill: false,
-            viewModel: RepairItemListViewModel(),
-          );
+          return RepairItemListPage(false);
         }));
       },
     },

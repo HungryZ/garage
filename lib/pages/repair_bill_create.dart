@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:garage/networking/networking.dart';
-import 'package:garage/pages/repair_item_list.dart';
-import 'package:garage/pages/repair_item_list_view_model.dart';
+import 'package:garage/pages/list_view/repair_item_list_page.dart';
 import 'package:garage/pages/repair_item_model.dart';
 import 'package:garage/tool/input_validator/input_model.dart';
 import 'package:garage/tool/input_validator/input_validator.dart';
@@ -174,7 +173,7 @@ class _RepairBillCreatePageState extends State<RepairBillCreatePage> {
               onTap: () {
                 Future result = Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
-                  return RepairItemListPage(isSelectingItemForBill: true, viewModel: RepairItemListViewModel(),);
+                  return RepairItemListPage(true);
                 }));
                 result.then((value) {
                   // print(value);
