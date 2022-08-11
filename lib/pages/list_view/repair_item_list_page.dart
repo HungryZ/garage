@@ -17,9 +17,9 @@ class RepairItemListPage extends StatefulWidget {
 class RepairItemListPageState extends State<RepairItemListPage> {
   final appBarTitle = '维修项目列表';
   final needsRequestDataWhenInit = true;
-  late final RepairItemSearchPage? searchPage;
+  RepairItemSearchPage? searchPage;
   var loadingStatus = RefreshFooterStatus.refreshing;
-  final List<RepairItemModel> items = [];
+  final List items = [];
   final int size = 20;
 
   int _page = 1;
@@ -138,22 +138,14 @@ class RepairItemListPageState extends State<RepairItemListPage> {
     });
   }
 
-  Future<List<RepairItemModel>?> requestItems(int page) async {
+  Future<List?> requestItems(int page) async {
     final response = await requestOfPage(page);
     if (response == null) return null;
 
     final List newItemsJson = response['records'];
     if (newItemsJson.length == 0) return null;
 
-    final List<RepairItemModel> newItems = [];
-    newItemsJson.forEach((element) {
-      final item = RepairItemModel();
-      item.id = element['id'];
-      item.name = element['name'];
-      item.price = (element['price'] as double).toInt();
-      newItems.add(item);
-    });
-    return newItems;
+    return decodeList(newItemsJson);
   }
 
   Future<Map<String, dynamic>?> requestOfPage(int page) {
@@ -162,6 +154,18 @@ class RepairItemListPageState extends State<RepairItemListPage> {
       method: HTTPMethod.GET,
       queryParameters: {'page': page, 'size': size},
     );
+  }
+
+  List decodeList(List itemsJson) {
+    final List<RepairItemModel> newItems = [];
+    itemsJson.forEach((element) {
+      final item = RepairItemModel();
+      item.id = element['id'];
+      item.name = element['name'];
+      item.price = (element['price'] as double).toInt();
+      newItems.add(item);
+    });
+    return newItems;
   }
 
   /// User Interaction
@@ -196,7 +200,7 @@ class RepairItemListPageState extends State<RepairItemListPage> {
     } else {
       Future result =
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return RepairItemCUDPage(model: items[index]);
+        return itemDetailPage(items[index]);
       }));
       result.then((value) {
         if (value == 1) {
@@ -210,5 +214,9 @@ class RepairItemListPageState extends State<RepairItemListPage> {
         }
       });
     }
+  }
+  
+  Widget itemDetailPage(model) {
+    return RepairItemCUDPage(model: model);
   }
 }
